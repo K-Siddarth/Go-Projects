@@ -1,16 +1,17 @@
 package utils
 
 import (
+	"fmt"
 	"math"
 
 	"gonum.org/v1/gonum/mat"
 )
 
 func Dot(m, n mat.Matrix) mat.Matrix {
-	r, _ := m.Dims()
-	_, c := m.Dims()
-	if r != c {
-		panic("Invalid input : rows and columns do not align for a dot product")
+	r, mc := m.Dims()
+	nr, c := n.Dims()
+	if mc != nr {
+		panic("Invalid input : rows and columns do not align for a dot product ")
 	}
 	res := mat.NewDense(r, c, nil)
 	res.Product(m, n)
@@ -61,6 +62,11 @@ func Subtract(m, n mat.Matrix) mat.Matrix {
 
 func Add(m, n mat.Matrix) mat.Matrix {
 	r, c := m.Dims()
+	nr, nc := n.Dims()
+	if r != nr || c != nc {
+		fmt.Println(r, c, " ", nr, nc)
+		panic("Invalid inputs : wrong dimensions in add")
+	}
 	res := mat.NewDense(r, c, nil)
 	res.Add(m, n)
 	return res
