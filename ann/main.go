@@ -16,7 +16,7 @@ func mnist_train(net *Network) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	t1 := time.Now()
 	line_num := 0
-	for epochs := 0; epochs < 5; epochs++ {
+	for epochs := range 5 {
 		fmt.Println("epochs: ", epochs)
 		train_file, _ := os.Open("data/mnist_train.csv")
 		read := csv.NewReader(bufio.NewReader(train_file))
@@ -92,13 +92,17 @@ func mnist_predict(net *Network) {
 
 func save(net Network) {
 	h, err := os.Create("model/hidden_weights.model")
-	defer h.Close()
+	if err != nil {
+		defer h.Close()
+	}
 
 	if err == nil {
 		net.hiddenWeights.MarshalBinaryTo(h)
 	}
 	out, err := os.Create("model/output_weights.model")
-	defer out.Close()
+	if err != nil {
+		defer out.Close()
+	}
 	if err == nil {
 		net.outputsWeights.MarshalBinaryTo(out)
 	}
@@ -107,6 +111,7 @@ func save(net Network) {
 
 func load(net *Network) {
 	h, err := os.Open("model/hidden_weights.model")
+
 	defer h.Close()
 
 	if err == nil {
@@ -115,6 +120,7 @@ func load(net *Network) {
 	}
 	out, err := os.Create("model/output_weights.model")
 	defer out.Close()
+
 	if err == nil {
 		net.outputsWeights.Reset()
 		net.outputsWeights.UnmarshalBinaryFrom(out)
@@ -136,6 +142,6 @@ func main() {
 		load(&net)
 		mnist_predict(&net)
 	default:
-		panic("Invalid argument")
+		panic("[Error]: Invalid argument. Either run in train mode or predict")
 	}
 }
