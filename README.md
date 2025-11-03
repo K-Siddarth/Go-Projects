@@ -18,4 +18,5 @@ To run the ANN:
 To run the server:
 
 &nbsp;&nbsp;go build 
+
 &nbsp;&nbsp;run the executable(main) in the directory (Contest directory) in which you want to create your problem directory
